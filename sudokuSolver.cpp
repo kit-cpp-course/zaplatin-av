@@ -10,6 +10,21 @@ sudokuSolver::sudokuSolver(size_t *matrix, size_t size): size(size) {
 	}
 };
 
+sudokuSolver::sudokuSolver(const sudokuSolver & source) {
+	size = source.size;
+	grid = new size_t[size*size];
+	memcpy_s(grid, size*size * sizeof(size_t), source.grid, size*size * sizeof(size_t));
+}
+
+sudokuSolver & sudokuSolver:: operator = (const sudokuSolver & that) {
+	delete[] grid;
+	size = that.size;
+	grid = new size_t[size*size];
+	memcpy_s(grid, size*size * sizeof(size_t), that.grid, size*size * sizeof(size_t));
+	return *this;
+}
+
+
 sudokuSolver::~sudokuSolver() {
 	delete[] grid;
 }

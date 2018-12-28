@@ -26,6 +26,28 @@ sudoku::sudoku(const size_t size):size(size), sideSquare((size_t)sqrt(size)), le
 	
 }
 
+sudoku::sudoku(const sudoku & source) {
+	size = source.size;
+	sideSquare = source.sideSquare;
+	level = source.level;
+	matrix = new size_t*[size];
+	matrix[0] = new size_t[size*size];
+	for (size_t i = 1; i != size; i++) {
+		matrix[i] = matrix[i - 1] + size;
+	}
+	memcpy_s(matrix[0], size * size * sizeof(size_t), source.matrix[0], size * size * sizeof(size_t));
+}
+
+sudoku & sudoku:: operator = (const sudoku & that) {
+	delete[] matrix[0];
+	delete[] matrix;
+	size = that.size;
+	sideSquare = that.sideSquare;
+	level = that.level;
+	memcpy_s(matrix[0], size * size * sizeof(size_t), that.matrix[0], size * size * sizeof(size_t));
+	return *this;
+}
+
 
 sudoku::~sudoku() {
 	
@@ -93,7 +115,7 @@ void sudoku::swapColumsArea() {
 	}
 }
 
-void sudoku::createNewField() {
+bool sudoku::createNewField() {
 	for (size_t i = 0; i < N; i++) {
 		switch (rand() % 5) {
 		case 0:
@@ -115,13 +137,19 @@ void sudoku::createNewField() {
 			break;
 		}
 	}
-	deliteItems();
+	return deliteItems();
 }
 
-void sudoku::deliteItems() {	
+bool sudoku::deliteItems() {	
 	size_t	i = 0,
 			j = 0,
 			temp = 0,
+			/*
+			 * Переменная, которая отвечает за создание
+			 * Если не удастся создать поле определенное количество раз 
+			 * (50 по умолчанию, то программа прекратит работу
+			 */
+			attempt=0,
 			// Переменная отвечающая за легкость судоку
 			minLevel = 0;
 
@@ -177,8 +205,14 @@ void sudoku::deliteItems() {
 		}
 	}
 
+	if (attempt == 50) {
+		std::cout << "Создать поле не удалось";
+		return false;
+	}
+
 	if (level > minLevel) {
 		level = size*size;
+		attempt++;
 		goto Start;
 	}
 
@@ -193,7 +227,7 @@ void sudoku::deliteItems() {
 
 	delete[] boolMatrix[0];
 	delete[] boolMatrix;
-
+	return true;
 }
 
 

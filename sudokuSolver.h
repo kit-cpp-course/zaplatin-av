@@ -1,9 +1,9 @@
 ﻿#pragma once
-
+#include  "abstract_sudokuSolver.h"
 /*
  * Класс, проверяющий наличие решения судоку
  */
-class sudokuSolver{
+class sudokuSolver: public solver{
 	/*
 	 * Одномерный массив, являющийся полем судоку
 	 */
@@ -11,7 +11,7 @@ class sudokuSolver{
 	/*
 	 * Размер судоку
 	 */
-	const size_t size;
+	size_t size;
 	/*
 	 * Функция, проверяющая, что число выбрано верно
 	 *
@@ -32,6 +32,25 @@ public:
 	 * @param size - размер судоку
 	 */
 	sudokuSolver(size_t *matrix, size_t size);
+	/*
+	 * Конструктор копирования.
+	 *
+	 * Создаёт судоку на основе уже существующего судоку.
+	 *
+	 * @param source судоку, на совнове которого следует создать
+	 * новое судоку
+	 */
+	sudokuSolver(const sudokuSolver & source);
+	/*
+	 * Оператор присваивания.
+	 *
+	 * Присваивает судоку значения из другого судоку.
+	 *
+	 * @param that второй операнд. Судоку, из которого следует взять
+	 * значения для текущего судоку.
+	 * @returns ссылку на текущий экземпляр класса.
+	 */
+	sudokuSolver & operator = (const sudokuSolver & that);
 	/*
 	 * Деструктор
 	 */
